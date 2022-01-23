@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <title>Kelsch Weather-Dashboard</title>
+</head>
+<body>
+
+  <header>
+    <div class="row py-2 blueSky">
+      <h1 class="col-12 text-center">Weather Dashboard</h1>
+    </div>
+  </header>
+
+  <main class="row px-5 pt-4 h-100">
+
+    <section class="col-lg-3 col-md-6 col-sm-12 px-5">
+      <form class="row borderB">
+        <label class="col-12 px-0"><h2>Search for a City:</h2></label>
+        <input class="col-12 my-2 round" type="text" id="cityInput" name="cityInput">
+        <input class="col-12 blueSky round mt-2 mb-4" type="submit" value="Search">
+      </form>
+      <div class="row d-none d-md-block ">
+        <button class="col-12 round gray mb-2 mt-4" id="austin">Austin</button>
+        <button class="col-12 round gray my-2" id="chicago">Chicago</button>
+        <button class="col-12 round gray my-2" id="newYork">New York</button>
+        <button class="col-12 round gray my-2" id="orlando">Orlando</button>
+        <button class="col-12 round gray my-2" id="sanFrancisco">San Francisco</button>
+        <button class="col-12 round gray my-2" id="seattle">Seattle</button>
+        <button class="col-12 round gray my-2" id="denver">Denver</button>
+        <button class="col-12 round gray my-2" id="atlanta">Atlanta</button>
+      </div>
+    </section>
+
+    
+
+    <section class="col-lg-9 col-md-6 col-sm-12">
+      <div class="row">
+
+        <div class="col-12 border border-2 border-dark p-4">
+          <h2 id="cityName">City</h2>
+          <p id="cityTemp">Temp:</p>
+          <p id="cityWind">Wind:</p>
+          <p id="cityHumidity">Humidity:</p>
+          <p id="cityUV">UV Index:</p>
+        </div>
+
+        <div class="col-12 pt-4">
+          <div class="row" id=dailyForecast>
+            <h3 class="col-12">5-Day Forecast:</h3>
+            <div id="firstDay" class="card col-lg-2 col-md-6 my-2 mx-auto">
+              <h3 id=>Day 1</h3>
+
+            </div>
+            <div id="secondDay" class="card col-lg-2 col-md-6 my-2 mx-auto">
+              <h3>Day 2</h3>
+              
+            </div>
+            <div id="thirdDay" class="card col-lg-2 col-md-6 my-2 mx-auto">
+              <h3>Day 3</h3>
+
+            </div>
+            <div id="fourthDay" class="card col-lg-2 col-md-6 my-2 mx-auto">
+              <h3>Day 4</h3>
+
+            </div>
+            <div id="fifthDay" class="card col-lg-2 col-md-6 my-2 mx-auto">
+              <h3>Day 5</h3>
+
+            </div>
+          </div>
+        </div>
+
+      </div> 
+    </section>
+  </main>
+  
+  <script src="./assets/js/script.js"></script>
+</body>
+</html>

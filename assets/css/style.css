@@ -1,0 +1,25 @@
+.round {
+  border-radius: 5px;
+}
+
+/* bb = border bottom */
+.borderB {
+  border-bottom: solid;
+}
+
+.blueSky {
+  background-image: linear-gradient(315deg, #63a4ff 0%, #83eaf1 74%);
+}
+
+.blueSky:hover {
+  color: white;
+}
+
+.gray {
+  color: white;
+  background-image: linear-gradient(180deg, #9dc5c3 0%, #5e5c5c 74%);
+}
+
+.gray:hover {
+  color: black;
+}
