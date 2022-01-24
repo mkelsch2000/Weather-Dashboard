@@ -1,3 +1,9 @@
+// create variables for current data in global scope
+var currentTemp = document.getElementById("cityTemp");
+var currentWind = document.getElementById("cityWind");
+var currentHumid = document.getElementById("cityHumidity");
+var currentUV = document.getElementById("cityUV");
+
 // Set empty array
 var currentDate = [];
 
@@ -36,6 +42,11 @@ var getRequestedPlace = function(event) {
       });
     } else {
       cityNameEl.innerHTML = "City";
+      currentTemp.innerHTML = "Temp: ";
+      currentWind.innerHTML = "Wind: ";
+      currentHumid.innerHTML = "Humidity: ";
+      currentUV.innerHTML = "UV Index: ";   
+      currentUV.classList.remove("goodUV", "moderateUV", "badUV", "p-1", "round");
       inputEl.value = "";
       alert("There is no city with that name in our database.")
     }
@@ -65,12 +76,6 @@ var getUV = function() {
 // Function to set current weather
 var currentWeather = function() {
 
-  // create variables for current data
-  var currentTemp = document.getElementById("cityTemp");
-  var currentWind= document.getElementById("cityWind");
-  var currentHumid = document.getElementById("cityHumidity");
-  var currentUV = document.getElementById("cityUV");
-
   // reset element data
   currentTemp.innerHTML = "Temp: ";
   currentWind.innerHTML = "Wind: ";
@@ -84,13 +89,13 @@ var currentWeather = function() {
   currentUV.innerHTML += currentDate[5];
 
   if (currentDate[5] <= 2) {
-    currentUV.classList.add("goodUV");
+    currentUV.classList.add("goodUV", "p-1", "round");
 
   } else if (currentDate[5] >= 3 && currentDate[5] <= 6) {
-    currentUV.classList.add("moderateUV");
+    currentUV.classList.add("moderateUV", "p-1", "round");
 
   } else {
-    currentUV.classList.add("badUV");
+    currentUV.classList.add("badUV", "p-1", "round");
   };
 
 }
