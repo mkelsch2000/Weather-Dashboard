@@ -86,7 +86,7 @@ var currentWeather = function() {
   if (currentDate[5] <= 2) {
     currentUV.classList.add("goodUV");
 
-  } else if (currentDate[5] >= 3 || currentDate[5] <= 6) {
+  } else if (currentDate[5] >= 3 && currentDate[5] <= 6) {
     currentUV.classList.add("moderateUV");
 
   } else {
