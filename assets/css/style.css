@@ -23,3 +23,15 @@
 .gray:hover {
   color: black;
 }
+
+.goodUV {
+  background-color: green;
+}
+
+.moderateUV {
+  background-color: yellow;
+}
+
+.badUV {
+  background-color: red;
+}
