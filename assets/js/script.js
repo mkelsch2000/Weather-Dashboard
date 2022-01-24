@@ -62,6 +62,39 @@ var getUV = function() {
   });
 };
 
+// Function to set current weather
+var currentWeather = function() {
+
+  // create variables for current data
+  var currentTemp = document.getElementById("cityTemp");
+  var currentWind= document.getElementById("cityWind");
+  var currentHumid = document.getElementById("cityHumidity");
+  var currentUV = document.getElementById("cityUV");
+
+  // reset element data
+  currentTemp.innerHTML = "Temp: ";
+  currentWind.innerHTML = "Wind: ";
+  currentHumid.innerHTML = "Humidity: ";
+  currentUV.innerHTML = "UV Index: ";
+
+  // set new data to elements
+  currentTemp.innerHTML += currentDate[0] + "\xB0";
+  currentWind.innerHTML += currentDate[1] + " MPH";
+  currentHumid.innerHTML += currentDate[2] + "%";
+  currentUV.innerHTML += currentDate[5];
+
+  if (currentDate[5] <= 2) {
+    currentUV.classList.add("goodUV");
+
+  } else if (currentDate[5] >= 3 || currentDate[5] <= 6) {
+    currentUV.classList.add("moderateUV");
+
+  } else {
+    currentUV.classList.add("badUV");
+  };
+
+}
+
 document.getElementById("search").addEventListener("click", getRequestedPlace);
 
 
