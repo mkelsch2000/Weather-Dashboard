@@ -13,7 +13,7 @@ var currentDate = [];
 // empty city object
 var cities = [];
 
-// search current weather API, and push response data to empty array.
+// collect input field data
 var getRequestedPlace = function(event) {
   // prevent reload when submitting
   event.preventDefault()
@@ -21,14 +21,27 @@ var getRequestedPlace = function(event) {
 
   // get requested City
   var inputEl = document.getElementById("cityInput").value;
-  var cityNameEl = document.getElementById("cityName");
-  cityNameEl.innerHTML = inputEl;
 
   //send inputEl data to create button function
   recentHistoryButton(inputEl);
+  searchDataBase(inputEl);
+}
+
+// get data from recent search history buttons and send data to function
+var buttonSearch = function(event) {
+  event.preventDefault()
+
+  searchDataBase(event.target.id);
+}
+
+var searchDataBase = function(input) {
+
+  // set city name
+  var cityNameEl = document.getElementById("cityName");
+  cityNameEl.innerHTML = input;
 
   // search API for requested city current weather
-  const currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
+  const currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + input + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
 
   //fetch data from api and push to empty array
   fetch(currentWeatherAPI).then(function(response) {
@@ -46,7 +59,7 @@ var getRequestedPlace = function(event) {
           data.coord.lon);
 
           // send city name to array
-          cityNameStorage(inputEl);
+          cityNameStorage(input);
           
           // call UV index api function
           forecastWeather(data.coord.lat, data.coord.lon)
@@ -62,7 +75,7 @@ var getRequestedPlace = function(event) {
       currentHumid.innerHTML = "Humidity: ";
       currentUV.innerHTML = "UV Index: ";   
       currentUV.classList.remove("goodUV", "moderateUV", "badUV", "p-1", "round");
-      inputEl = "";
+      input = "";
       alert("There is no city with that name in our database.")
     }
   });
@@ -179,10 +192,9 @@ function cityNameStorage(input) {
     localStorage.setItem("cityNames", stringedCityNames);
   } else {
     cities = JSON.parse(localStorage.getItem("cityNames"));
-    while (cities.length > 6) {
+    while (cities.length > 7) {
       cities.splice(0,1);
     }
-    console.log(cities);
     cities.push(input);
     var stringedCityNames = JSON.stringify(cities);
     localStorage.setItem("cityNames", stringedCityNames);
@@ -210,7 +222,9 @@ var cityButtons = function () {
   }
 }
 
+// set event listeners and called city buttons to lead buttons from local storage.
 document.getElementById("search").addEventListener("click", getRequestedPlace);
+document.getElementById("button-area").addEventListener("click", buttonSearch);
 cityButtons();
 
 
