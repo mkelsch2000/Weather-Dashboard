@@ -171,13 +171,18 @@ var currentWeather = function() {
 
 // save city names to local storage
 function cityNameStorage(input) {
-
+  
   if (localStorage.getItem("cityNames") === null) {
-    cities.push(input)
+    cities = [];
+    cities.push(input);
     var stringedCityNames = JSON.stringify(cities);
     localStorage.setItem("cityNames", stringedCityNames);
   } else {
     cities = JSON.parse(localStorage.getItem("cityNames"));
+    while (cities.length > 6) {
+      cities.splice(0,1);
+    }
+    console.log(cities);
     cities.push(input);
     var stringedCityNames = JSON.stringify(cities);
     localStorage.setItem("cityNames", stringedCityNames);
