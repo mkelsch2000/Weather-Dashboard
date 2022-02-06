@@ -7,7 +7,7 @@ var currentUV = document.getElementById("cityUV");
 // Set empty array
 var currentDate = [];
 
-// search API, and push response data to empty array.
+// search current weather API, and push response data to empty array.
 var getRequestedPlace = function(event) {
   // prevent reload when submitting
   event.preventDefault()
@@ -17,11 +17,17 @@ var getRequestedPlace = function(event) {
   var cityNameEl = document.getElementById("cityName");
   cityNameEl.innerHTML = inputEl.value;
 
-  // search API for requested city weather
-  var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl.value + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
+  // send city name to local storage
+  function cityNameStorage() {
+    localStorage.setItem(inputEl.value);
+    console.log(localStorage);
+  }
+
+  // search API for requested city current weather
+  var currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl.value + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
 
   //fetch data and push to empty array
-  fetch(apiUrl).then(function(response) {
+  fetch(currentWeatherAPI).then(function(response) {
     if (response.ok) {
       response.json().then(function(data) {
         //clear array before data push
@@ -38,7 +44,7 @@ var getRequestedPlace = function(event) {
           inputEl.value = "";
 
           // call UV index api function
-          getUV();
+          forecastWeather(data.coord.lat, data.coord.lon)
       });
     } else {
       cityNameEl.innerHTML = "City";
@@ -53,25 +59,68 @@ var getRequestedPlace = function(event) {
   });
 }
 
-// get UV index from separate api url
-var getUV = function() {
-  // input current array's latitude and longitude coords in api search
-  var indexUVUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + currentDate[3] + "&lon=" + currentDate[4] + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
+// Function to set forecast
+var forecastWeather = function(lat, lon) {
 
-  // fetch new api data and push UV index to currentDate Array
-  fetch(indexUVUrl).then(function(response) {
+  fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5")
+
+  .then(function (response) {
     if (response.ok) {
       response.json().then(function(data) {
+
+        // set array for dates I want to pull from
+        const fiveDayForecast = [
+          data.daily[1],
+          data.daily[2],
+          data.daily[3],
+          data.daily[4],
+          data.daily[5]
+        ];
+
+        // clear forecast section
+        document.getElementById("dailyForecast").innerHTML = "<h3 class='col-12'>5-Day Forecast:</h3>";
+
+        fiveDayForecast.forEach(dailyForecastFunction);
+        function dailyForecastFunction(item) {
+          // covert UNIX time to local time
+          const localTime = new Date(item.dt*1000);
+
+          // dynamically generate container div and append it to 5-day forecast div
+          const dailyDiv = document.createElement("div");
+          dailyDiv.classList.add("card", "col-lg-2", "col-md-6", "my-2", "mx-auto", "pt-1");
+          document.getElementById("dailyForecast").appendChild(dailyDiv);
+
+          // dynamically generate content for container div
+          const forecastDate = document.createElement("p");
+          forecastDate.classList.add("text-nowrap", "h4")
+          const forecastTemp = document.createElement("p");
+          const forecastWind = document.createElement("p");
+          const forecastHumid = document.createElement("p");
+
+          forecastDate.innerHTML += localTime.getDate() + "/" + localTime.getMonth() + "/" + localTime.getFullYear();
+          forecastTemp.innerHTML += "Temp: " + item.temp.max + "\xB0";
+          forecastWind.innerHTML += "Wind: " + item.wind_speed + " MPH";
+          forecastHumid.innerHTML += "Humidity: " + item.humidity + "%";
+
+          // append elements to container div
+          dailyDiv.appendChild(forecastDate);
+          dailyDiv.appendChild(forecastTemp);
+          dailyDiv.appendChild(forecastWind);
+          dailyDiv.appendChild(forecastHumid);
+        }
+      
+        const timeStamp = data.daily[1].dt
+        const date = new Date(timeStamp*1000);
         currentDate.push(
           data.current.uvi
         );
 
-        // call Function to set current day weather
         currentWeather();
-      });
+      })
     }
-  });
-};
+    
+  })
+}
 
 // Function to set current weather
 var currentWeather = function() {
@@ -99,6 +148,8 @@ var currentWeather = function() {
   };
 
 }
+
+
 
 document.getElementById("search").addEventListener("click", getRequestedPlace);
 
