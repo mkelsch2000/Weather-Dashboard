@@ -1,13 +1,13 @@
-// create variables for current data in global scope
-var currentTemp = document.getElementById("cityTemp");
-var currentWind = document.getElementById("cityWind");
-var currentHumid = document.getElementById("cityHumidity");
-var currentUV = document.getElementById("cityUV");
+// create constants for current data in global scope
+const currentTemp = document.getElementById("cityTemp");
+const currentWind = document.getElementById("cityWind");
+const currentHumid = document.getElementById("cityHumidity");
+const currentUV = document.getElementById("cityUV");
 
 // set const for button area div
 const buttonSection = document.getElementById("button-area");
 
-// Set empty array
+// Set empty date array
 var currentDate = [];
 
 // empty city object
@@ -17,31 +17,24 @@ var cities = [];
 var getRequestedPlace = function(event) {
   // prevent reload when submitting
   event.preventDefault()
-
-  // get requested City
-  var inputEl = document.getElementById("cityInput");
-  var cityNameEl = document.getElementById("cityName");
-  cityNameEl.innerHTML = inputEl.value;
-
-  // send city name to array
-  cities.push(inputEl.value);
-  cityNameStorage();
-
-  // create button with new city name
-  var newButtons = document.createElement("button");
-    newButtons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
-    newButtons.setAttribute("id", inputEl.value);
-    newButtons.innerHTML += inputEl.value;
-      buttonSection.appendChild(newButtons);
   
 
-  // search API for requested city current weather
-  var currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl.value + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
+  // get requested City
+  var inputEl = document.getElementById("cityInput").value;
+  var cityNameEl = document.getElementById("cityName");
+  cityNameEl.innerHTML = inputEl;
 
-  //fetch data and push to empty array
+  //send inputEl data to create button function
+  recentHistoryButton(inputEl);
+
+  // search API for requested city current weather
+  const currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
+
+  //fetch data from api and push to empty array
   fetch(currentWeatherAPI).then(function(response) {
     if (response.ok) {
       response.json().then(function(data) {
+        
         //clear array before data push
         currentDate = [];
 
@@ -52,11 +45,15 @@ var getRequestedPlace = function(event) {
           data.coord.lat, 
           data.coord.lon);
 
-          // clear search bar value
-          inputEl.value = "";
-
+          // send city name to array
+          cityNameStorage(inputEl);
+          
           // call UV index api function
           forecastWeather(data.coord.lat, data.coord.lon)
+
+          // clear search bar value
+          document.getElementById("cityInput").value = "";
+          
       });
     } else {
       cityNameEl.innerHTML = "City";
@@ -65,10 +62,24 @@ var getRequestedPlace = function(event) {
       currentHumid.innerHTML = "Humidity: ";
       currentUV.innerHTML = "UV Index: ";   
       currentUV.classList.remove("goodUV", "moderateUV", "badUV", "p-1", "round");
-      inputEl.value = "";
+      inputEl = "";
       alert("There is no city with that name in our database.")
     }
   });
+}
+
+// create new button from search result
+var recentHistoryButton = function(input) {
+  // create button with new city name
+  if (!input) {
+  } else {
+    var newButtons = document.createElement("button");
+    newButtons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
+    newButtons.setAttribute("id", input);
+    newButtons.innerHTML += input;
+    buttonSection.appendChild(newButtons);
+  }
+  
 }
 
 // Function to set forecast
@@ -159,33 +170,40 @@ var currentWeather = function() {
 };
 
 // save city names to local storage
-function cityNameStorage() {
-  var stringedCityNames = JSON.stringify(cities);
-  localStorage.setItem("cityNames", stringedCityNames);
-  console.log(localStorage);
+function cityNameStorage(input) {
+
+  if (localStorage.getItem("cityNames") === null) {
+    cities.push(input)
+    var stringedCityNames = JSON.stringify(cities);
+    localStorage.setItem("cityNames", stringedCityNames);
+  } else {
+    cities = JSON.parse(localStorage.getItem("cityNames"));
+    cities.push(input);
+    var stringedCityNames = JSON.stringify(cities);
+    localStorage.setItem("cityNames", stringedCityNames);
+  }
 }
+
 
 // generate buttons from local storage
 var cityButtons = function () {
   // retrieve data from local storage
   var recentCities = JSON.parse(localStorage.getItem("cityNames"));
+  console.log(recentCities);
 
-  if (!recentCities) {
-    recentCities = []
-  } else {
-    // create for loop to generate buttons.
-    recentCities.forEach(buttonGenerator);
-    function buttonGenerator(city) {
-      var buttons = document.createElement("button");
-      buttons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
-      buttons.setAttribute("id", city);
-      buttons.innerHTML += city;
-      buttonSection.appendChild(buttons);
-    }
-  }
-  
-  
-
+  // if (!recentCities) {
+  //   recentCities = []
+  // } else {
+  //   // create for loop to generate buttons.
+  //   recentCities.forEach(buttonGenerator);
+  //   function buttonGenerator(city) {
+  //     var buttons = document.createElement("button");
+  //     buttons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
+  //     buttons.setAttribute("id", city);
+  //     buttons.innerHTML += city;
+  //     buttonSection.appendChild(buttons);
+  //   }
+  // }
 }
 
 document.getElementById("search").addEventListener("click", getRequestedPlace);
