@@ -4,8 +4,14 @@ var currentWind = document.getElementById("cityWind");
 var currentHumid = document.getElementById("cityHumidity");
 var currentUV = document.getElementById("cityUV");
 
+// set const for button area div
+const buttonSection = document.getElementById("button-area");
+
 // Set empty array
 var currentDate = [];
+
+// empty city object
+var cities = [];
 
 // search current weather API, and push response data to empty array.
 var getRequestedPlace = function(event) {
@@ -17,11 +23,17 @@ var getRequestedPlace = function(event) {
   var cityNameEl = document.getElementById("cityName");
   cityNameEl.innerHTML = inputEl.value;
 
-  // // send city name to local storage
-  // function cityNameStorage() {
-  //   localStorage.setItem(inputEl.value);
-  //   console.log(localStorage);
-  // }
+  // send city name to array
+  cities.push(inputEl.value);
+  cityNameStorage();
+
+  // create button with new city name
+  var newButtons = document.createElement("button");
+    newButtons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
+    newButtons.setAttribute("id", inputEl.value);
+    newButtons.innerHTML += inputEl.value;
+      buttonSection.appendChild(newButtons);
+  
 
   // search API for requested city current weather
   var currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl.value + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
@@ -109,8 +121,6 @@ var forecastWeather = function(lat, lon) {
           dailyDiv.appendChild(forecastHumid);
         }
       
-        const timeStamp = data.daily[1].dt
-        const date = new Date(timeStamp*1000);
         currentDate.push(
           data.current.uvi
         );
@@ -146,11 +156,39 @@ var currentWeather = function() {
   } else {
     currentUV.classList.add("badUV", "p-1", "round");
   };
+};
+
+// save city names to local storage
+function cityNameStorage() {
+  var stringedCityNames = JSON.stringify(cities);
+  localStorage.setItem("cityNames", stringedCityNames);
+  console.log(localStorage);
+}
+
+// generate buttons from local storage
+var cityButtons = function () {
+  // retrieve data from local storage
+  var recentCities = JSON.parse(localStorage.getItem("cityNames"));
+
+  if (!recentCities) {
+    recentCities = []
+  } else {
+    // create for loop to generate buttons.
+    recentCities.forEach(buttonGenerator);
+    function buttonGenerator(city) {
+      var buttons = document.createElement("button");
+      buttons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
+      buttons.setAttribute("id", city);
+      buttons.innerHTML += city;
+      buttonSection.appendChild(buttons);
+    }
+  }
+  
+  
 
 }
 
-
-
 document.getElementById("search").addEventListener("click", getRequestedPlace);
+cityButtons();
 
 
