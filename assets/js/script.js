@@ -17,11 +17,11 @@ var getRequestedPlace = function(event) {
   var cityNameEl = document.getElementById("cityName");
   cityNameEl.innerHTML = inputEl.value;
 
-  // send city name to local storage
-  function cityNameStorage() {
-    localStorage.setItem(inputEl.value);
-    console.log(localStorage);
-  }
+  // // send city name to local storage
+  // function cityNameStorage() {
+  //   localStorage.setItem(inputEl.value);
+  //   console.log(localStorage);
+  // }
 
   // search API for requested city current weather
   var currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + inputEl.value + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
