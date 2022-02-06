@@ -188,22 +188,21 @@ function cityNameStorage(input) {
 // generate buttons from local storage
 var cityButtons = function () {
   // retrieve data from local storage
-  var recentCities = JSON.parse(localStorage.getItem("cityNames"));
-  console.log(recentCities);
+  cities = JSON.parse(localStorage.getItem("cityNames"));
 
-  // if (!recentCities) {
-  //   recentCities = []
-  // } else {
-  //   // create for loop to generate buttons.
-  //   recentCities.forEach(buttonGenerator);
-  //   function buttonGenerator(city) {
-  //     var buttons = document.createElement("button");
-  //     buttons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
-  //     buttons.setAttribute("id", city);
-  //     buttons.innerHTML += city;
-  //     buttonSection.appendChild(buttons);
-  //   }
-  // }
+  if (localStorage.getItem("cityNames") === null) {
+
+  } else {
+    // create for loop to generate buttons.
+    cities.forEach(buttonGenerator);
+    function buttonGenerator(city) {
+      var buttons = document.createElement("button");
+      buttons.classList.add("col-12", "round", "gray", "mb-2", "mt-4");
+      buttons.setAttribute("id", city);
+      buttons.innerHTML += city;
+      buttonSection.appendChild(buttons);
+    }
+  }
 }
 
 document.getElementById("search").addEventListener("click", getRequestedPlace);
