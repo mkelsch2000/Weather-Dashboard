@@ -123,7 +123,7 @@ var forecastWeather = function(lat, lon) {
 
           // dynamically generate container div and append it to 5-day forecast div
           const dailyDiv = document.createElement("div");
-          dailyDiv.classList.add("card", "col-lg-2", "col-md-6", "my-2", "mx-auto", "pt-1");
+          dailyDiv.classList.add("card", "col-lg-2", "col-md-6", "my-2", "mx-auto", "pt-1", "text-light", "bg-dark");
           document.getElementById("dailyForecast").appendChild(dailyDiv);
 
           // dynamically generate content for container div
