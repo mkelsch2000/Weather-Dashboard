@@ -14,10 +14,10 @@ var currentDate = [];
 var cities = [];
 
 // collect input field data
-var getRequestedPlace = function(event) {
+var getRequestedPlace = function (event) {
   // prevent reload when submitting
   event.preventDefault()
-  
+
 
   // get requested City
   var inputEl = document.getElementById("cityInput").value;
@@ -28,13 +28,13 @@ var getRequestedPlace = function(event) {
 }
 
 // get data from recent search history buttons and send data to function
-var buttonSearch = function(event) {
+var buttonSearch = function (event) {
   event.preventDefault()
 
   searchDataBase(event.target.id);
 }
 
-var searchDataBase = function(input) {
+var searchDataBase = function (input) {
 
   // set city name
   var cityNameEl = document.getElementById("cityName");
@@ -44,36 +44,36 @@ var searchDataBase = function(input) {
   const currentWeatherAPI = "https://api.openweathermap.org/data/2.5/weather?q=" + input + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5"
 
   //fetch data from api and push to empty array
-  fetch(currentWeatherAPI).then(function(response) {
+  fetch(currentWeatherAPI).then(function (response) {
     if (response.ok) {
-      response.json().then(function(data) {
-        
+      response.json().then(function (data) {
+
         //clear array before data push
         currentDate = [];
 
-          currentDate.push(
-          data.main.temp, 
-          data.wind.speed, 
-          data.main.humidity, 
-          data.coord.lat, 
+        currentDate.push(
+          data.main.temp,
+          data.wind.speed,
+          data.main.humidity,
+          data.coord.lat,
           data.coord.lon);
 
-          // send city name to array
-          cityNameStorage(input);
-          
-          // call UV index api function
-          forecastWeather(data.coord.lat, data.coord.lon)
+        // send city name to array
+        cityNameStorage(input);
 
-          // clear search bar value
-          document.getElementById("cityInput").value = "";
-          
+        // call UV index api function
+        forecastWeather(data.coord.lat, data.coord.lon)
+
+        // clear search bar value
+        document.getElementById("cityInput").value = "";
+
       });
     } else {
       cityNameEl.innerHTML = "City";
       currentTemp.innerHTML = "Temp: ";
       currentWind.innerHTML = "Wind: ";
       currentHumid.innerHTML = "Humidity: ";
-      currentUV.innerHTML = "UV Index: ";   
+      currentUV.innerHTML = "UV Index: ";
       currentUV.classList.remove("goodUV", "moderateUV", "badUV", "p-1", "round");
       input = "";
       alert("There is no city with that name in our database.")
@@ -82,7 +82,7 @@ var searchDataBase = function(input) {
 }
 
 // create new button from search result
-var recentHistoryButton = function(input) {
+var recentHistoryButton = function (input) {
   // create button with new city name
   if (!input) {
   } else {
@@ -92,72 +92,72 @@ var recentHistoryButton = function(input) {
     newButtons.innerHTML += input;
     buttonSection.appendChild(newButtons);
   }
-  
+
 }
 
 // Function to set forecast
-var forecastWeather = function(lat, lon) {
+var forecastWeather = function (lat, lon) {
 
   fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=59801c8adee414a87d2a3fdb745b55e5")
 
-  .then(function (response) {
-    if (response.ok) {
-      response.json().then(function(data) {
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
 
-        // set array for dates I want to pull from
-        const fiveDayForecast = [
-          data.daily[1],
-          data.daily[2],
-          data.daily[3],
-          data.daily[4],
-          data.daily[5]
-        ];
+          // set array for dates I want to pull from
+          const fiveDayForecast = [
+            data.daily[1],
+            data.daily[2],
+            data.daily[3],
+            data.daily[4],
+            data.daily[5]
+          ];
 
-        // clear forecast section
-        document.getElementById("dailyForecast").innerHTML = "<h3 class='col-12'>5-Day Forecast:</h3>";
+          // clear forecast section
+          document.getElementById("dailyForecast").innerHTML = "<h3 class='col-12'>5-Day Forecast:</h3>";
 
-        fiveDayForecast.forEach(dailyForecastFunction);
-        function dailyForecastFunction(item) {
-          // covert UNIX time to local time
-          const localTime = new Date(item.dt*1000);
+          fiveDayForecast.forEach(dailyForecastFunction);
+          function dailyForecastFunction(item) {
+            // covert UNIX time to local time
+            const localTime = new Date(item.dt * 1000);
 
-          // dynamically generate container div and append it to 5-day forecast div
-          const dailyDiv = document.createElement("div");
-          dailyDiv.classList.add("card", "col-lg-2", "col-md-6", "my-2", "mx-auto", "pt-1", "text-light", "bg-dark");
-          document.getElementById("dailyForecast").appendChild(dailyDiv);
+            // dynamically generate container div and append it to 5-day forecast div
+            const dailyDiv = document.createElement("div");
+            dailyDiv.classList.add("card", "col-lg-2", "col-md-6", "my-2", "mx-auto", "pt-1", "text-light", "bg-dark");
+            document.getElementById("dailyForecast").appendChild(dailyDiv);
 
-          // dynamically generate content for container div
-          const forecastDate = document.createElement("p");
-          forecastDate.classList.add("text-nowrap", "h4")
-          const forecastTemp = document.createElement("p");
-          const forecastWind = document.createElement("p");
-          const forecastHumid = document.createElement("p");
+            // dynamically generate content for container div
+            const forecastDate = document.createElement("p");
+            forecastDate.classList.add("text-nowrap", "h4")
+            const forecastTemp = document.createElement("p");
+            const forecastWind = document.createElement("p");
+            const forecastHumid = document.createElement("p");
 
-          forecastDate.innerHTML += localTime.getDate() + "/" + localTime.getMonth() + "/" + localTime.getFullYear();
-          forecastTemp.innerHTML += "Temp: " + item.temp.max + "\xB0";
-          forecastWind.innerHTML += "Wind: " + item.wind_speed + " MPH";
-          forecastHumid.innerHTML += "Humidity: " + item.humidity + "%";
+            forecastDate.innerHTML += localTime.getDate() + "/" + localTime.getMonth() + "/" + localTime.getFullYear();
+            forecastTemp.innerHTML += "Temp: " + item.temp.max + "\xB0";
+            forecastWind.innerHTML += "Wind: " + item.wind_speed + " MPH";
+            forecastHumid.innerHTML += "Humidity: " + item.humidity + "%";
 
-          // append elements to container div
-          dailyDiv.appendChild(forecastDate);
-          dailyDiv.appendChild(forecastTemp);
-          dailyDiv.appendChild(forecastWind);
-          dailyDiv.appendChild(forecastHumid);
-        }
-      
-        currentDate.push(
-          data.current.uvi
-        );
+            // append elements to container div
+            dailyDiv.appendChild(forecastDate);
+            dailyDiv.appendChild(forecastTemp);
+            dailyDiv.appendChild(forecastWind);
+            dailyDiv.appendChild(forecastHumid);
+          }
 
-        currentWeather();
-      })
-    }
-    
-  })
+          currentDate.push(
+            data.current.uvi
+          );
+
+          currentWeather();
+        })
+      }
+
+    })
 }
 
 // Function to set current weather
-var currentWeather = function() {
+var currentWeather = function () {
 
   // reset element data
   currentTemp.innerHTML = "Temp: ";
@@ -184,7 +184,7 @@ var currentWeather = function() {
 
 // save city names to local storage
 function cityNameStorage(input) {
-  
+
   if (localStorage.getItem("cityNames") === null) {
     cities = [];
     cities.push(input);
@@ -193,7 +193,7 @@ function cityNameStorage(input) {
   } else {
     cities = JSON.parse(localStorage.getItem("cityNames"));
     while (cities.length > 7) {
-      cities.splice(0,1);
+      cities.splice(0, 1);
     }
     cities.push(input);
     var stringedCityNames = JSON.stringify(cities);
